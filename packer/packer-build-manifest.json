@@ -1,0 +1,23 @@
+{
+  "builds": [
+    {
+      "name": "amazon_linux",
+      "builder_type": "amazon-ebs",
+      "build_time": 1709526228,
+      "files": null,
+      "artifact_id": "eu-west-2:ami-0c70e7e0fdd836d24,us-east-1:ami-0eaf7244b5565afd0",
+      "packer_run_uuid": "c3927ee5-adb4-63f8-1bd4-3ddbc8786064",
+      "custom_data": null
+    },
+    {
+      "name": "ubuntu_22",
+      "builder_type": "amazon-ebs",
+      "build_time": 1709531432,
+      "files": null,
+      "artifact_id": "eu-west-2:ami-09575f1f43e534836,us-east-1:ami-0d61463b2bbfcf5de",
+      "packer_run_uuid": "5fd8961f-557d-680f-4f78-a209e71f54f4",
+      "custom_data": null
+    }
+  ],
+  "last_run_uuid": "5fd8961f-557d-680f-4f78-a209e71f54f4"
+}
