@@ -1,6 +1,6 @@
 variable "ami_prefix" {
   type    = string
-  default = "packer-hashicorp-ami-ubuntu-22"
+  default = "jabra/images/hashicorp/nomad-server/ubuntu-22"
 }
 
 variable "region" {
@@ -21,7 +21,7 @@ variable "ami_regions" {
 variable "tags" {
   type = map(string)
   default = {
-    "Name"        = "HashiCorp AMI (via Packer)"
+    "Name"        = "Nomad Server AMI (via Packer)"
     "Environment" = "Production"
     "Release"     = "Latest"
     "Created-by"  = "Packer"
