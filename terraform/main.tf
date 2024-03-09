@@ -29,7 +29,7 @@ resource "aws_vpc" "vpc" {
   cidr_block = var.vpc_cidr
 
   tags = {
-    Name        = "${var.project_name}/${var.environment}/VPC"
+    Name        = "${var.project_name}/${var.environment}/vpc"
     Environment = var.environment
     Terraform   = "true"
   }
@@ -37,7 +37,7 @@ resource "aws_vpc" "vpc" {
 
 # Deploy the private subnets
 resource "aws_subnet" "private_subnets" {
-  for_each          = { "${var.project_name}/${var.environment}/Private-Subnet" = 1 }
+  for_each          = { "${var.project_name}/${var.environment}/private-subnet" = 1 }
   vpc_id            = aws_vpc.vpc.id
   cidr_block        = cidrsubnet(var.vpc_cidr, 8, each.value)
   availability_zone = tolist(data.aws_availability_zones.available.names)[each.value]
@@ -51,7 +51,7 @@ resource "aws_subnet" "private_subnets" {
 
 # Deploy the public subnets
 resource "aws_subnet" "public_subnets" {
-  for_each                = { "${var.project_name}/${var.environment}/Public-Subnet" = 1 }
+  for_each                = { "${var.project_name}/${var.environment}/public-subnet" = 1 }
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = cidrsubnet(var.vpc_cidr, 8, each.value + 100)
   availability_zone       = tolist(data.aws_availability_zones.available.names)[each.value]
@@ -74,7 +74,7 @@ resource "aws_route_table" "public_route_table" {
   }
 
   tags = {
-    Name        = "${var.project_name}/${var.environment}/Public-Route-Table"
+    Name        = "${var.project_name}/${var.environment}/public-route-table"
     Environment = var.environment
     Terraform   = "true"
   }
@@ -90,7 +90,7 @@ resource "aws_route_table" "private_route_table" {
   }
 
   tags = {
-    Name        = "${var.project_name}/${var.environment}/Private-Route-Table"
+    Name        = "${var.project_name}/${var.environment}/private-route-table"
     Environment = var.environment
     Terraform   = "true"
   }
@@ -117,7 +117,7 @@ resource "aws_internet_gateway" "internet_gateway" {
   vpc_id = aws_vpc.vpc.id
 
   tags = {
-    Name        = "${var.project_name}/${var.environment}/Internet-Gateway"
+    Name        = "${var.project_name}/${var.environment}/internet-gateway"
     Environment = var.environment
     Terraform   = "true"
   }
@@ -128,7 +128,7 @@ resource "aws_eip" "nat_gateway_eip" {
   depends_on = [aws_internet_gateway.internet_gateway]
 
   tags = {
-    Name        = "${var.project_name}/${var.environment}/NAT-Gateway-EIP"
+    Name        = "${var.project_name}/${var.environment}/nat-gateway-eip"
     Environment = var.environment
     Terraform   = "true"
   }
@@ -138,10 +138,10 @@ resource "aws_eip" "nat_gateway_eip" {
 resource "aws_nat_gateway" "nat_gateway" {
   depends_on    = [aws_subnet.public_subnets]
   allocation_id = aws_eip.nat_gateway_eip.id
-  subnet_id     = aws_subnet.public_subnets["${var.project_name}/${var.environment}/Public-Subnet"].id
+  subnet_id     = aws_subnet.public_subnets["${var.project_name}/${var.environment}/public-subnet"].id
 
   tags = {
-    Name        = "${var.project_name}/${var.environment}/NAT-Gateway"
+    Name        = "${var.project_name}/${var.environment}/nat-gateway"
     Environment = var.environment
     Terraform   = "true"
   }
@@ -239,11 +239,11 @@ resource "tls_private_key" "generated" {
 
 resource "local_file" "private_key_pem" {
   content  = tls_private_key.generated.private_key_pem
-  filename = "${path.module}/Jabra-DevSecOps-Key.pem"
+  filename = "${path.module}/jabra-devsecops-key.pem"
 }
 
 resource "aws_key_pair" "generated" {
-  key_name   = "Jabra-DevSecOps-Key"
+  key_name   = "jabra-devsecops-key"
   public_key = tls_private_key.generated.public_key_openssh
 
   lifecycle {
@@ -255,7 +255,7 @@ resource "aws_key_pair" "generated" {
 resource "aws_instance" "nomad_consul_server" {
   ami           = data.aws_ami.nomad_server.id
   instance_type = "t2.micro"
-  subnet_id     = aws_subnet.public_subnets["${var.project_name}/${var.environment}/Public-Subnet"].id
+  subnet_id     = aws_subnet.public_subnets["${var.project_name}/${var.environment}/public-subnet"].id
   security_groups = [
     aws_security_group.vpc-ping.id,
     aws_security_group.ingress-ssh.id,
