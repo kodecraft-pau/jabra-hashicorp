@@ -24,10 +24,10 @@ terraform init
 # Execute a dry-run
 terraform plan
 
-# You can also add `-auto-approve` option
+# You can also add `-auto-approve` option (not advisable)
 terraform apply
 
-# You can also add `-auto-approve` option
+# You can also add `-auto-approve` option (not advisable)
 terraform destroy
 
 # Show the state of the terraform aplied in AWS
@@ -36,9 +36,21 @@ terraform show
 # Show a list of all the resources that terraform is currently managing
 terraform state list
 
+# Showcase which providers are required by our configuration
+terraform providers
 
+# Replace an specific resource
+terraform apply -replace="aws_instance.web_server"
 
+# Terraform Plan/Apply using variables file
+terraform plan --var-file="dev.tfvars"
+terraform apply --var-file="dev.tfvars"
 
+```
 
-
+### AWS Setup Environment Variables
+```
+$ export AWS_ACCESS_KEY_ID="accesskey"
+$ export AWS_SECRET_ACCESS_KEY="secretkey"
+$ export AWS_DEFAULT_REGION="us-west-2"
 ```
