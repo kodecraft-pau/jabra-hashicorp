@@ -28,8 +28,8 @@ EOF
   provisioner "shell" {
     inline = [
       "cd /tmp/",
-      "sudo chmod +x hashicorp-suites.sh",
-      "sudo ./hashicorp-suites.sh"
+      "sudo chmod +x install.sh",
+      "sudo ./install.sh"
     ]
   }
 
